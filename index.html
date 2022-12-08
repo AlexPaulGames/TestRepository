@@ -4,15 +4,20 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-     <link rel="stylesheet" href="TemplateData/style.css">
-	<title>Pixel Adventure</title>
+     <!--
+     <link rel="stylesheet" href="TemplateData/style.css"> 
+     !-->
+
+
+     <script src="https://yandex.ru/ads/system/context.js" async></script>
+
+	<title>Brain Puzzle</title>
 	<style>
 		html,
 		body {
-			background: #000;
 			width: 100%;
 			height: 100%;
-			overflow: visible;
+			overflow: hidden;
 			padding: 0;
 			margin: 0;
 		}
@@ -38,138 +43,259 @@
 			image-rendering: pixelated;
 			-ms-interpolation-mode: nearest-neighbor;
 		}
+        div#custom-logo, div#custom-loader {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        div#custom-logo {
+            background-image: url('Loading Icon.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            width: 200px;
+            height: 200px;
+        }
+
+        div#custom-loader {
+            margin-top: 155px;
+            width: 80%;
+            height: 50px;
+            background: lightgray;
+            box-shadow: 0px 0px 15px 5px black;
+        }
+
+            div#custom-loader .fill {
+                width: 0%;
+                height: 100%;
+                background: red;
+            }
+
+            div#custom-loader .label {
+                position: relative;
+                top: -44px;
+                font-size: 35px;
+                text-align: center;
+                font-family: sans-serif, calibri;
+            }
+
 
 	</style>
+
 </head>
 
 <body>
-	<div id="gameContainer">
+    <div id="gameContainer">
 
-		<canvas id="unity-canvas" data-pixel-art=""></canvas>
-		<script src="Build/PA-VK-1001.loader.js"></script>
+        <canvas id="unity-canvas" data-pixel-art=""></canvas>
+        <div id="unity-custom-loading-screen">
+            <div id="custom-logo"></div>
+            <div id="custom-loader">
+                <div class="fill"></div>
+                <div class="label"></div>
+            </div>
+        </div>
+        <script src="Build/BrainTestReady.loader.js"></script>
 
-		<script>
-			var canvas = document.querySelector("#unity-canvas");
-			var config = {
-				dataUrl: "Build/PA-VK-1001.data.unityweb",
-				frameworkUrl: "Build/PA-VK-1001.framework.js.unityweb",
-				codeUrl: "Build/PA-VK-1001.wasm.unityweb",
-				streamingAssetsUrl: "StreamingAssets",
-				companyName: "APgames",
-				productName: "Pixel Adventure",
-				productVersion: "1.0.0.1",
-			};
-			var scaleToFit;
+        <script>
+            var canvas = document.querySelector("#unity-canvas");
+            var config = {
+                dataUrl: "Build/BrainTestReady.data.unityweb",
+                frameworkUrl: "Build/BrainTestReady.framework.js.unityweb",
+                codeUrl: "Build/BrainTestReady.wasm.unityweb",
+                streamingAssetsUrl: "StreamingAssets",
+                companyName: "APgames",
+                productName: "BrainPuzzle",
+                productVersion: "1.0.1",
+            };
+            var scaleToFit;
             var unityI = null;
-			try {
-				scaleToFit = !!JSON.parse("");
-			} catch (e) {
-				scaleToFit = true;
-			}
-			function progressHandler(progress) {
-				var percent = progress * 100 + '%';
-				canvas.style.background = 'linear-gradient(to right, white, white ' + percent + ', transparent ' + percent + ', transparent) no-repeat center';
-				canvas.style.backgroundSize = '100% 1rem';
-			}
-			function onResize() {
-				var container = canvas.parentElement;
-				var w;
-				var h;
+            try {
+                scaleToFit = !!JSON.parse("");
+            } catch (e) {
+                scaleToFit = true;
+            }
+            function progressHandler(progress) {
+                const fill = customLoadingBar.getElementsByClassName("fill")[0];
+                const fillText = customLoadingBar.getElementsByClassName("label")[0];
 
-				if (scaleToFit) {
-					w = window.innerWidth;
-					h = window.innerHeight;
+                fill.animate(
+                    [
+                        { width: (value * 100) + "%" }
+                    ],
+                    {
+                        duration: 300,
+                        fill: "forwards"
+                    }
+                );
 
-					var r = 1080 / 1980;
+                fillText.textContent = (value * 100).toFixed() + "%";
+            }
+            function onResize() {
+                var container = canvas.parentElement;
+                var w;
+                var h;
 
-					if (w * r > window.innerHeight) {
-						w = Math.min(w, Math.ceil(h / r));
-					}
-					h = Math.floor(w * r);
-				} else {
-					w = 1980;
-					h = 1080;
-				}
+                if (scaleToFit) {
+                    w = window.innerWidth;
+                    h = window.innerHeight;
 
-				container.style.width = canvas.style.width = w + "px";
-				container.style.height = canvas.style.height = h + "px";
-				container.style.top = Math.floor((window.innerHeight - h) / 2) + "px";
-				container.style.left = Math.floor((window.innerWidth - w) / 2) + "px";
-			}
-			createUnityInstance(canvas, config, progressHandler).then(function (instance) {
-				canvas = instance.Module.canvas;
+                    var r = 1280 / 720;
+
+                    if (w * r > window.innerHeight) {
+                        w = Math.min(w, Math.ceil(h / r));
+                    }
+                    h = Math.floor(w * r);
+                } else {
+                    w = 720;
+                    h = 1280;
+                }
+
+                container.style.width = canvas.style.width = w + "px";
+                container.style.height = canvas.style.height = h + "px";
+                container.style.top = Math.floor((window.innerHeight - h) / 2) + "px";
+                container.style.left = Math.floor((window.innerWidth - w) / 2) + "px";
+            }
+            function changeColor() {
+                var gameInstance = UnityLoader.instantiate("gameContainer", "Build/awesome_game.json", { Module: { backgroundColor: "#FFFFFF" } });
+            }
+            createUnityInstance(canvas, config, progressHandler).then(function (instance) {
+                canvas = instance.Module.canvas;
                 unityI = instance;
-				onResize();
-			});
-			window.addEventListener('resize', onResize);
-			onResize();
-		</script>
-	</div>
+                if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+                    document.body.style.background = "white";
+                    console.log("MOBILE");
+                }
+                else {
+                    document.body.style.background = "lightgray";
+                    console.log("DESKTOP");
+                }
+                onResize();
+            });
+            window.addEventListener('resize', onResize);
+            onResize();
+        </script>
 
-	<script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
+        <!-- Yandex Games SDK -->
+        <script src="https://yandex.ru/games/sdk/v2"></script>
+        <script>
+            var player;
+            var sdk;
+            var payments = null;
 
-    <script type="text/javascript">
+            YaGames.init({
+                adv: {
+                    onAdvClose: wasShown => {
+                        console.info('adv closed!');
+                    }
+                }
+            })
+                .then(ysdk => {
+                    sdk = ysdk;
+                    sdk.adv.showFullscreenAdv({ callbacks: {} });
+                });
 
-      vkBridge.send('VKWebAppInit');
+            var lb;
+
+            function GetLeaderBoard() {
+                sdk.getLeaderboards().then(_lb => lb = _lb);
+            }
+
+            function SetLeaderBoard(score) {
+                sdk.getLeaderboards()
+                    .then(lb => {
+                        console.log(score);
+                        lb.setLeaderboardScore('LeaderBoard', score);
+                    });
+            }
+
+            function GetLeaderBoardEntries() {
+                sdk.getLeaderboards()
+                    .then(lb => {
+                        lb.getLeaderboardEntries('LeaderBoard', { quantityTop: 10, includeUser: true, quantityAround: 3 }).then(res => {
+                            console.log(res);
+                            unityI.SendMessage('YandexSDK', 'BoardEntriesReady', JSON.stringify(res));
+                        });
+                    });
+            }
 
 
 
-      function auth(){
-        vkBridge.send('VKWebAppGetUserInfo').then(_info =>{
-          console.log(_info);
-            unityI.SendMessage('YandexSDK', 'AuthenticateSuccess', JSON.stringify(_info));
-        });
-      }
+            function auth() {
+                initPlayer().then(() => {
+                    getUser();
+                }).catch(err => {
+                    sdk.auth.openAuthDialog().then(() => {
+                        initPlayer();
+                        getUser();
+                    });
+                });
+            }
 
-      function getUserData(){
-        vkBridge.send("VKWebAppStorageGet",{"keys":["_save"]}).then(data =>{
-        console.log(data);
-            unityI.SendMessage('YandexSDK', 'DataGetting', JSON.stringify(data));
-      });}
 
-      function setUserData(data){
-        console.log(data);
-        vkBridge.send('VKWebAppStorageSet',{"key": "_save" , "value": data}).then(_info =>{
-          console.log("Saved!")});
-      }
+            function initPlayer() {
+                console.log('InitPlayerTry')
+                return sdk.getPlayer().then(_player => {
+                    console.log('InitPlayer2');
+                    player = _player;
+                });
+            }
 
-      function showFullscrenAd(){
-        vkBridge.send('VKWebAppShowNativeAds',{ad_format:"interstitial"}).then(data => {
-          console.log(data);});
-      }
+            function getUser() {
+                console.log('try to get Name');
+                var data = player.getName();
+                unityI.SendMessage('YandexSDK', 'AuthenticateSuccess', data);
+                console.log('getName done');
 
-      function showRewardedAd(){
-        vkBridge.send('VKWebAppShowNativeAds',{ad_format:"reward"}).then(data => {
-          console.log(data);
-            unityI.SendMessage('YandexSDK', 'RewardGetting');})
-      }
+            }
 
-	  function joinGroup(){
-		  vkBridge.send("VKWebAppJoinGroup", {"group_id": 211143508});
-	  }
+            function getUserData() {
+                player.getData().then(stats => {
+                    console.log('Data is getting');
+                    console.log(JSON.stringify(stats));
+                    GetLeaderBoard();
+                    unityI.SendMessage('YandexSDK', 'DataGetting', JSON.stringify(stats));
+                });
+            }
 
-	  function postWall(){
-		  vkBridge.send("VKWebAppShowWallPostBox", {
-              "message": "Pixel Adventure - крутая игра, в которой предстоит пройти сложное приключение!",
-              "attachments": "https://vk.com/app8190525_205468985"
-		});
-	  }
+            function setUserData(_data) {
+                console.log('Try Save');
+                console.log(_data);
+                player.setData({ data: _data }).then(() => {
+                    console.log('saved');
+                }).catch(() => { console.log('unsaved') });
+            }
 
-	  function shareLink(){
-		  vkBridge.send("VKWebAppShare", {"link": "vk.com/app8096716_205468985"});
-	  }
+            function showFullscrenAd() {
+                sdk.adv.showFullscreenAdv({
+                    callbacks: {
+                        onClose: function (wasShown) { },
+                        onError: function (error) { }
+                    }
+                })
+            }
 
-	  function addToFavorites(){
-		  vkBridge.send("VKWebAppAddToFavorites");
-	  }
+            function showRewardedAd(id) {
+                sdk.adv.showRewardedVideo({
+                    callbacks: {
+                        onOpen: () => { },
+                        onRewarded: () => {
+                            unityI.SendMessage('YandexSDK', 'RewardGetting');
+                            console.log('Rewarded! Id: ' + id);
+                        },
+                        onClose: () => { },
+                        onError: (e) => {
+                            var data = { "id": id, "error": error };
+                            console.log('Error while open video ad:', e);
+                        }
+                    }
+                })
+            }
+        </script>
 
-	  function inviteFriends(){
-		  vkBridge.send("VKWebAppShowInviteBox", {})
-         .then(data => console.log(data.success))  
-        .catch(error => console.log(error));
-	  }
-    </script>
-
+    </div>
 </body>
 
 </html>

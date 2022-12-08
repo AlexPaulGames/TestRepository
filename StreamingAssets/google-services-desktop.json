@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "413225724177",
-    "project_id": "unplanned-adventure",
-    "storage_bucket": "unplanned-adventure.appspot.com"
+    "project_number": "1093702361016",
+    "project_id": "brain-puzzle-418a2",
+    "storage_bucket": "brain-puzzle-418a2.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:413225724177:android:f94d5f9b83b46f7a31c4b0",
+        "mobilesdk_app_id": "1:1093702361016:android:cc8b726e9817cdbe74394d",
         "android_client_info": {
-          "package_name": "com.APgames.UnplannedAdventure"
+          "package_name": "com.APgames.BrainPuzzle"
         }
       },
       "oauth_client": [
         {
-          "client_id": "413225724177-mumgo6tunh11us52524pp3ms9m4lk1fl.apps.googleusercontent.com",
+          "client_id": "1093702361016-t7d39eudi9m028uiachc52mj9roi6121.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyA2EqUw7ilsEBVBbUfEYnBKdtGbG80_Chs"
+          "current_key": "AIzaSyAt0_k0IHWsM4Rz3STPCSOHnWEpb1azsCM"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "413225724177-mumgo6tunh11us52524pp3ms9m4lk1fl.apps.googleusercontent.com",
+              "client_id": "1093702361016-t7d39eudi9m028uiachc52mj9roi6121.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
