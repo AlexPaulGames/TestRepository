@@ -42,6 +42,9 @@
             } catch (e) {
                 scaleToFit = true;
             }
+            
+            loadingScreen.style.display = "block";
+            
             function progressHandler(value) {
                 const fill = customLoadingBar.getElementsByClassName("fill")[0];
                 const fillText = customLoadingBar.getElementsByClassName("label")[0];
@@ -91,6 +94,7 @@
         }).then(function (instance) {
                 canvas = instance.Module.canvas;
                 unityI = instance;
+                loadingScreen.style.display = "none";
                 if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
                     document.body.style.background = "white";
                     console.log("MOBILE");
