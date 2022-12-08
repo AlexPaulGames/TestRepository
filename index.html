@@ -49,7 +49,7 @@
             } catch (e) {
                 scaleToFit = true;
             }
-            function progressHandler(progress) {
+            function progressHandler(value) {
                 const fill = customLoadingBar.getElementsByClassName("fill")[0];
                 const fillText = customLoadingBar.getElementsByClassName("label")[0];
 
@@ -93,7 +93,9 @@
             function changeColor() {
                 var gameInstance = UnityLoader.instantiate("gameContainer", "Build/awesome_game.json", { Module: { backgroundColor: "#FFFFFF" } });
             }
-            createUnityInstance(canvas, config, progressHandler).then(function (instance) {
+            createUnityInstance(canvas, config, (progress)=> {
+          progressHandler(progress);
+        }).then(function (instance) {
                 canvas = instance.Module.canvas;
                 unityI = instance;
                 if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
